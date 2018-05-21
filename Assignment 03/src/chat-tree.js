@@ -1,16 +1,36 @@
 function ChatTree(element) {
     //flags 
     let loadWasFiredFlag = false;
-    
+
+    //global variables
+    let allListItems =  element.childNodes;
+    let cursorIndex = 0;
+    let currentNode = allListItems[cursorIndex];
+    let globalItems = null;
+
     //=========================================================
     // load
     //=========================================================
     function load(items) {
+        //set global variable according to 'load' function argument
+        globalItems = items;
+
+        //don't allow to reload before clearing
         if (loadWasFiredFlag) {
+            console.log("please click 'Clear' button before reloading!");
             return;
         }
+
         printFirstLevelChildren(items);
-        navigation(items, "addEventListener");
+        addEventListeners();
+
+        //variables initialization
+        allListItems =  element.childNodes;
+        cursorIndex = 0;
+        currentNode = allListItems[cursorIndex];
+        currentNode.style.backgroundColor = "aqua";
+
+        //set flag
         loadWasFiredFlag = true;
     }
     //=========================================================
@@ -18,7 +38,8 @@ function ChatTree(element) {
     //=========================================================
     function clear(items) {
         //remove event listeners
-        navigation(items, "removeEventListener");
+        //navigation(items, "removeEventListener");
+        removeEventListeners();
         //remove all Li elements
         let allListItems =  element.childNodes;
         for (let i=0; i<allListItems.length; i++) {
@@ -27,6 +48,7 @@ function ChatTree(element) {
             //decrement index because 'allListItems' became shorter after removal
             i--;
         }
+        loadWasFiredFlag = false;
     }
     //=========================================================
     // printFirstLevelChildren
@@ -176,139 +198,124 @@ function ChatTree(element) {
         }
     }
     //=========================================================
-    // navigation
+    // addEventListeners
     //=========================================================
-    function navigation(items, removeEventListenerFlag) {
-        //toggle to add/remove event listeners
-        //remove event listener
-        if (removeEventListenerFlag === "removeEventListener") {
-            console.log("event listener removed!");
-            element.removeEventListener("click", handleClickEvent);
-            element.removeEventListener("dblclick", handleDoubleClickEvent);
-            element.removeEventListener('keydown', handleKeyDownEvent);
-            return true;
-        //add event listener
-        } else if (removeEventListenerFlag === "addEventListener") {
-            console.log("event listener added!");
-            element.addEventListener("click", handleClickEvent);
-            element.addEventListener("dblclick", handleDoubleClickEvent);
-            element.addEventListener('keydown', handleKeyDownEvent);
-        } else {
-            console.log("Invalid string used in argument!");
-            return false;
-        }
-
-        //variables initialization
-        let allListItems =  element.childNodes;
-        let i = 0;
-        let currentNode = allListItems[i];
-        let parentName = "";
-        currentNode.style.backgroundColor = "aqua";
-
-        //event handlers
-
-        //---------------------------------------------------------
-        //this function is responsible for li selection using the mouse
-        function handleClickEvent(event) {
-            if(event.target && event.target.nodeName === "LI") {
-                //remove background of previous selection
-                currentNode.style.backgroundColor = "white";
-                //get index of clicked list item
-                for (let j = 0; j < allListItems.length; j++) {
-                    if (allListItems[j] === event.target) {
-                        i=j;
-                        break;
-                    }
+    function addEventListeners() {
+        console.log("event listener added!");
+        element.addEventListener("click", handleClickEvent);
+        element.addEventListener("dblclick", handleDoubleClickEvent);
+        element.addEventListener('keydown', handleKeyDownEvent);
+    }
+    //=========================================================
+    // removeEventListeners
+    //=========================================================
+    function removeEventListeners() {
+        console.log("event listener removed!");
+        element.removeEventListener("click", handleClickEvent);
+        element.removeEventListener("dblclick", handleDoubleClickEvent);
+        element.removeEventListener('keydown', handleKeyDownEvent);
+    }
+    //=========================================================
+    //event handlers
+    //=========================================================
+    //this function is responsible for li selection using the mouse
+    function handleClickEvent(event) {
+        if(event.target && event.target.nodeName === "LI") {
+            //remove background of previous selection
+            currentNode.style.backgroundColor = "white";
+            //get index of clicked list item
+            for (let j = 0; j < allListItems.length; j++) {
+                if (allListItems[j] === event.target) {
+                    cursorIndex=j;
+                    break;
                 }
-                //update current node according to index
-                currentNode = allListItems[i];
-                currentNode.style.backgroundColor = "aqua";
             }
-        }
-        //---------------------------------------------------------
-        //this function is responsible for expand/collapse using the mouse
-        function handleDoubleClickEvent(event) {
-            handleClickEvent(event);
-            expandOrCollapse();
-        }
-        //---------------------------------------------------------
-        function handleKeyDownEvent(event) {
-            const keyName = event.key;
-            switch(keyName) {
-                case 'ArrowDown':
-                    goDown();
-                    break;
-                case 'ArrowUp':
-                    goUp();
-                    break;
-                case 'ArrowRight':
-                    expand();
-                    break;
-                case 'ArrowLeft':
-                    collapse();
-                    break;
-                case 'Enter':
-                    expandOrCollapse();
-                    break;
-            }
-        }
-        //---------------------------------------------------------
-        function goDown() {
-            //check if selector reached the end of list
-            if (i === allListItems.length - 1) {
-                return;
-            }
-            currentNode.style.backgroundColor = "white";
-            i++;
-            currentNode = allListItems[i];
+            //update current node according to index
+            currentNode = allListItems[cursorIndex];
             currentNode.style.backgroundColor = "aqua";
         }
-        //---------------------------------------------------------
-        function goUp() {
-            //check if selector reached the beginning of list
-            if (i === 0) {
-                return;
-            }
-            currentNode.style.backgroundColor = "white";
-            i--;
-            currentNode = allListItems[i];
-            currentNode.style.backgroundColor = "aqua";
-        }
-        //---------------------------------------------------------
-        function expand(){
-            if (currentNode.dataset.dataToggle === "expanded") {
-                return;
-            }
-            parentName = currentNode.innerText;
-            let res = printImmediateChildrenOfGroup(parentName, items, currentNode);
-            //set dataToggle attribute as "expanded" on li only in case it was really expanded
-            if (res) {
-                currentNode.dataset.dataToggle = "expanded";
-            }
-        }
-        //---------------------------------------------------------
-        function collapse() {
-            if (currentNode.dataset.dataToggle === "collapsed") {
+    }
+    //---------------------------------------------------------
+    //this function is responsible for expand/collapse using the mouse
+    function handleDoubleClickEvent(event) {
+        handleClickEvent(event);
+        expandOrCollapse();
+    }
+    //---------------------------------------------------------
+    function handleKeyDownEvent(event) {
+        const keyName = event.key;
+        switch(keyName) {
+            case 'ArrowDown':
+                goDown();
+                break;
+            case 'ArrowUp':
                 goUp();
-                return;
-            }
-            //prevents getting 'dataToggle' attribute on elements that were not expanded
-            if (currentNode.dataset.dataToggle === "expanded") {
-                parentName = currentNode.innerText;
-                unPrintAllChildrenOfGroup(parentName, items, allListItems);
-                currentNode.dataset.dataToggle = "collapsed";
-            }
-        }
-        //---------------------------------------------------------
-        function expandOrCollapse() {
-            if (currentNode.dataset.dataToggle !== "expanded") {
+                break;
+            case 'ArrowRight':
                 expand();
-            } else {
+                break;
+            case 'ArrowLeft':
                 collapse();
-            }
+                break;
+            case 'Enter':
+                expandOrCollapse();
+                break;
         }
-        //---------------------------------------------------------
-        return true;
+    }
+    //---------------------------------------------------------
+    function goDown() {
+        //check if selector reached the end of list
+        if (cursorIndex === allListItems.length - 1) {
+            return;
+        }
+        currentNode.style.backgroundColor = "white";
+        cursorIndex++;
+        currentNode = allListItems[cursorIndex];
+        currentNode.style.backgroundColor = "aqua";
+    }
+    //---------------------------------------------------------
+    function goUp() {
+        //check if selector reached the beginning of list
+        if (cursorIndex === 0) {
+            return;
+        }
+        currentNode.style.backgroundColor = "white";
+        cursorIndex--;
+        currentNode = allListItems[cursorIndex];
+        currentNode.style.backgroundColor = "aqua";
+    }
+    //---------------------------------------------------------
+    function expand(){
+        if (currentNode.dataset.dataToggle === "expanded") {
+            return;
+        }
+        let parentName = currentNode.innerText;
+        let res = printImmediateChildrenOfGroup(parentName, globalItems, currentNode);
+        //set dataToggle attribute as "expanded" on li only in case it was really expanded
+        if (res) {
+            currentNode.dataset.dataToggle = "expanded";
+        }
+    }
+    //---------------------------------------------------------
+    function collapse() {
+        if (currentNode.dataset.dataToggle === "collapsed") {
+            goUp();
+            return;
+        }
+        //prevents getting 'dataToggle' attribute on elements that were not expanded
+        if (currentNode.dataset.dataToggle === "expanded") {
+            let parentName = currentNode.innerText;
+            unPrintAllChildrenOfGroup(parentName, globalItems, allListItems);
+            currentNode.dataset.dataToggle = "collapsed";
+        }
+    }
+    //---------------------------------------------------------
+    function expandOrCollapse() {
+        if (currentNode.dataset.dataToggle !== "expanded") {
+            expand();
+        } else {
+            collapse();
+        }
     }
     //=========================================================
     // return from 'ChatTree' function 
