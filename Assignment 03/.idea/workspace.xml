@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/chat-tree.js" description="let currentArrayMember = items[i];" line="156" />
+    <bookmark url="file://$PROJECT_DIR$/src/chat-tree.js" description="let currentArrayMember = items[i];" line="152" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06d8dc8c-1c5e-47e1-825e-822197b375ce" name="Default" comment="" />
@@ -23,8 +23,8 @@
       <file leaf-file-name="chat-tree.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/chat-tree.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" selection-start-line="26" selection-end-line="26" />
+            <state relative-caret-position="153">
+              <caret line="9" column="27" lean-forward="true" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -88,6 +88,7 @@
       <find>nodes</find>
       <find>console</find>
       <find>expended</find>
+      <find>loadWasFiredFlag</find>
     </findStrings>
   </component>
   <component name="IdeDocumentHistory">
@@ -197,12 +198,12 @@
       <workItem from="1526560052554" duration="769000" />
       <workItem from="1526672006701" duration="61233000" />
       <workItem from="1526882978258" duration="62000" />
-      <workItem from="1526885023136" duration="6422000" />
+      <workItem from="1526885023136" duration="7721000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="69661000" />
+    <option name="totallyTimeSpent" value="70960000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1087" y="-847" width="735" height="1255" extended-state="6" />
@@ -398,8 +399,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/chat-tree.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="153">
+          <caret line="9" column="27" lean-forward="true" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
         </state>
       </provider>
     </entry>

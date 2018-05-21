@@ -3,9 +3,10 @@ function ChatTree(element) {
     let loadWasFiredFlag = false;
 
     //global variables
-    let allListItems =  element.childNodes;
+    let allListItems =  null;
     let cursorIndex = 0;
-    let currentNode = allListItems[cursorIndex];
+    let currentNode = null;
+
     let globalItems = null;
 
     //=========================================================
@@ -14,31 +15,26 @@ function ChatTree(element) {
     function load(items) {
         //set global variable according to 'load' function argument
         globalItems = items;
-
         //don't allow to reload before clearing
         if (loadWasFiredFlag) {
             console.log("please click 'Clear' button before reloading!");
             return;
         }
-
         printFirstLevelChildren(items);
         addEventListeners();
-
         //variables initialization
         allListItems =  element.childNodes;
         cursorIndex = 0;
         currentNode = allListItems[cursorIndex];
         currentNode.style.backgroundColor = "aqua";
-
         //set flag
         loadWasFiredFlag = true;
     }
     //=========================================================
     // clear
     //=========================================================
-    function clear(items) {
+    function clear() {
         //remove event listeners
-        //navigation(items, "removeEventListener");
         removeEventListeners();
         //remove all Li elements
         let allListItems =  element.childNodes;
